@@ -49,7 +49,7 @@ try:
     inputAtlas=nib.load(os.path.join(fsPath,'mri','aparc.DKTatlas+aseg.nii.gz'))
 except:
     #can nibael handle mgz?
-    inputAtlas=nib.load(os.path.join(fsPath,'mri','aparc.DKTatlas+aseg.mgz'))
+    inputAtlas=nib.load(os.path.join(fsPath,'mri','aparc+aseg.mgz'))
 inputAtlas=wmaPyTools.roiTools.inflateAtlasIntoWMandBG(inputAtlas, 1)
 # lookupTablePath=config['lookupTable']
 # lookupTable=pd.read_csv(lookupTablePath)
@@ -183,7 +183,7 @@ for iIndex,iSide in enumerate(sideList):
     roiInflateIntersection=wmaPyTools.roiTools.findROISintersection([deROI,palPutROI],inflateiter=12)
     #find the intersection of this with the white matter
     ventAlicROI=wmaPyTools.roiTools.findROISintersection([roiInflateIntersection,wmROI],inflateiter=0)
-    nib.save(nib.nifti1.Nifti1Image(ventAlicROI.get_fdata(), ventAlicROI.affine),os.path.join('ROIS','ventAlicROI'+iSide+'.nii.gz'))
+    nib.save(nib.nifti1.Nifti1Image(ventAlicROI.get_fdata(), ventAlicROI.affine),os.path.join(outDir,'ROIS','ventAlicROI'+iSide+'.nii.gz'))
    
     
     inferiorStreams=wmaPyTools.segmentationTools.segmentTractMultiROI_fast(streamlines, [ventAlicROI], [True], ['any'])
@@ -213,6 +213,8 @@ for iIndex,iSide in enumerate(sideList):
 
 from scipy.io import savemat
 #save down the classification structure
+if not os.path.exists(os.path.join(outDir,'wmc')):
+    os.makedirs(os.path.join(outDir,'wmc'))
 savemat(os.path.join(outDir,'wmc','classification.mat'),classificationOut)
  
 

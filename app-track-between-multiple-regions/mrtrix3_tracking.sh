@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## define number of threads to use
-NCORE=8
+NCORE=16
 
 #number of max seconds to run tckgen.
 #sometime tckgen gets stuck running for hours.. with no hope of finding enough fiber.
