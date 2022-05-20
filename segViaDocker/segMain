@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#copy the config.json from the above directory
+cp config.json segViaDocker/config.json
+
+#get the bindpath of the directory above
+currDir=$(pwd)
+echo ${currDir}
+#cd ..
+#aboveDir=$(pwd)
+#cd ${currDir}
+
+singularity exec  docker://brainlife/dipy:1.4.1 segViaDocker/seg_aLIC_connections.py
+
+#cp -r -f segViaDocker/output output
+

@@ -1,83 +1,51 @@
-[![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.444-blue.svg)](https://doi.org/10.25663/bl.app.444)
+# app-track_aLIC
+Track the [anterior limb of the internal capsule](https://doi.org/10.1523/JNEUROSCI.2335-17.2017 )
+Cataloging accounts of white matter tracts and their anatomy throughout the literature.
 
-# app-template-python
-This is a template showing how to develop a python-based brainlife.io/app
+## Production Info
 
-# app-example-documentation
-This is an example of how to write documentation (readme.md and license.md for Apps on brainlife.io)
+### Author
+[Dan Bullock](https://github.com/DanNBullock/) ([bullo092@umn.edu](mailto:bullo092@umn.edu))
 
-Write the following here...
+### PI
+[Sarah Heilbronner](https://med.umn.edu/bio/department-of-neuroscience/sarah-heilbronner) (heilb028@umn.edu)
 
-1) What the App does, and how it does it at the basic level.
-2) Briefly explain what 1) means for novice users in a language that 1st year psychology student can understand it.
-3) Briefly description of input / output files.
+### Funding Information
 
-### Authors
-- [Franco Pestilli](pestilli@utexas.edu)
+[![NIH-NIBIB-1T32EB031512-01](https://img.shields.io/badge/NIH_NIBIB-1T32EB031512--01-blue.svg)](https://reporter.nih.gov/project-details/10205698)
+[![NIMH-5P50MH119569-02](https://img.shields.io/badge/NIMH-5P50MH119569--02-blue.svg)](https://reporter.nih.gov/project-details/10123009)
+[![NIMH-5R01MH118257-04](https://img.shields.io/badge/NIMH-5R01MH118257--04-blue.svg)](https://reporter.nih.gov/project-details/10122991)
+[![NIDA-1P30DA048742-01A1](https://img.shields.io/badge/NIDA-1P30DA048742--01A1-blue.svg)](https://reporter.nih.gov/project-details/10025457)
 
-### Contributors
-- [Franco Pestilli](pestilli@utexas.edu)
+- [Dan Bullock](https://github.com/DanNBullock/)'s work is supported by the following sources:
+    - The University of Minnesota’s Neuroimaging Postdoctoral Fellowship Program, College of Science and Engineering's, and the Medical School's NIH funded T32 Neuroimaging Training Grant. NOGA: [1T32EB031512-01](https://reporter.nih.gov/project-details/10205698) 
 
-#### Copyright (c) 2020 brainlife.io The University of Texas at Austin and Indiana University
+- [Sarah Heilbronner](https://med.umn.edu/bio/department-of-neuroscience/sarah-heilbronner)'s work is supported by the following sources:
+    - The University of Minnesota’s Neurosciences' and Medical School's NIMH grant for the investigation of "Neural Basis of Psychopathology, Addictions and Sleep Disorders Study Section[NPAS]". NOGA: [5P50MH119569-02-04](https://reporter.nih.gov/project-details/10123009) 
+    - The University of Minnesota’s Neurosciences' Translational Neurophysiology grant. NOGA: [5R01MH118257-04](https://reporter.nih.gov/project-details/10122991)
+    - The University of Minnesota’s Neurosciences' Addiction Connectome grant. NOGA: [1P30DA048742-01A1](https://reporter.nih.gov/project-details/10025457)
 
-### Funding Acknowledgement
-brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your code and publications. Copy and past the following lines into your repository when using this code.
+### Copyright info
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 
-[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
-[![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
-[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
-[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
-[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+## Project Scope
 
-### Citations
-We ask that you the following articles when publishing papers that used data, code or other resources created by the brainlife.io community.
+### The target problem
 
-1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+lorem ipsum
+
+### The proposed solution
+
+lorem ipsum
+
+## How it works
+
+### Step 1
+
+lorem ipsum
+
+#### Step 1.1
+
+lorem ipsum
 
 
-## Running the App 
-
-### On Brainlife.io
-
-You can submit this App online at [https://doi.org/10.25663/bl.app.444](https://doi.org/10.25663/bl.app.444) via the "Execute" tab.
-
-### Running Locally (on your machine)
-
-1. git clone this repo.
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files.
-
-```json
-{
-  "t1": "t1.nii.gz"
-}
-```
-
-3. Launch the App by executing `main`
-
-```bash
-./main
-```
-
-### Sample Datasets
-
-If you don't have your own input file, you can download sample datasets from Brainlife.io, or you can use [Brainlife CLI](https://github.com/brain-life/cli).
-
-```
-npm install -g brainlife
-bl login
-mkdir input
-bl dataset download 5a0f0fad2c214c9ba8624376#5a050966eec2b300611abff2 && mv 5a0f0fad2c214c9ba8624376#5a050966eec2b300611abff2 .
-```
-
-## Output
-
-All output file (a resampled T1w NIFTI-1 file) will be generated inside the current working directory (pwd), inside a specifc directory called:
-
-```
-out_dir
-```
-
-### Dependencies
-
-This App only requires DIPY.org to run. 

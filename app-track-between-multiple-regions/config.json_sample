@@ -1,0 +1,18 @@
+{
+    "dwi": "../testdata/output/dwi.nii.gz",
+    "bvecs": "../testdata/output/dwi.bvecs",
+    "bvals": "../testdata/output/dwi.bvals",
+    "freesurfer": "../testdata/output",
+    "parc": "../testdata/output/mri/aparc.DKTatlas+aseg.nii.gz",
+    "key": "../5c7835f1012ec90026779d07/5c50c3f7ecd2f200ccfe9fb4/key.txt",
+    "rois": "../5d2ca27978d9fa1cee2a3e5b/rois/rois",
+    "maxlength": 250,
+    "minlength": 10,
+    "stepsize": 0.5,
+    "max_num": 1000000,
+    "num_fibers": 1000000,
+    "smoothKernel": 1,
+    "max_lmax": "",
+    "num_repetitions": 1,
+    "roiPairs": "1032 1031 1028 1027 1026 1024 1023 1022 1020 1019 1018 1017 1014 1012 1003 1002 ; 9 10 16 28\n2032 2031 2028 2027 2026 2024 2023 2022 2020 2019 2018 2017 2014 2012 2003 1002 2 4 5 ; 48 49 16 60"
+}

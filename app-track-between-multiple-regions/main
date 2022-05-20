@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=2,vmem=10g,walltime=18:00:00
+#PBS -N tbmr
+#PBS -V
+
+set -x
+set -e
+
+#copy the config.json from the above directory
+cp config.json app-track-between-multiple-regions/config.json
+
+#get the bindpath of the directory above
+#currDir=$(pwd)
+#cd ..
+#aboveDir=$(pwd)
+#cd ${currDir}
+
+echo "creating ROIs"
+singularity exec -e docker://brainlife/dipy:1.4.1 app-track-between-multiple-regions/produce_aLIC_ROIs.py
+
+echo "Tracking data..."
+time singularity exec -e docker://brainlife/mrtrix3:3.0.0 app-track-between-multiple-regions/mrtrix3_tracking.sh
+
+echo "merging output tcks"
+singularity exec -e docker://brainlife/dipy:1.4.1 app-track-between-multiple-regions/mergeTcks.py
+
+#cp -r app-track-between-multiple-regions/output output
