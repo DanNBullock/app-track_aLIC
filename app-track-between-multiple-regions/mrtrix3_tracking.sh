@@ -23,7 +23,7 @@ BVEC=`jq -r '.bvec' config.json`
 ANAT=`jq -r '.anat' config.json`
 
 #get the freesurfer directory
-fsDir=`jq -r '.fsDir' config.json`
+fsDir=`jq -r '.freesurfer' config.json`
 
 ## parse potential ensemble / individual lmaxs
 ENS_LMAX=`jq -r '.ens_lmax' config.json`
