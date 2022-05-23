@@ -8,7 +8,7 @@ Created on Tue May 17 13:31:27 2022
 
 import os
 
-#sys.path.append('./wma_pyTools')
+sys.path.append('wma_pyTools')
 #startDir=os.getcwd()
 #some how set a path to wma pyTools repo directory
 #wmaToolsDir='wma_pyTools'
