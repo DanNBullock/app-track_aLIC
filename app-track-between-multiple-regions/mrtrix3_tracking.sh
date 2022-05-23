@@ -438,6 +438,7 @@ mrconvert output/ROIS/fullCutIC11_ROI_left.nii.gz output/ROIS/fullCutIC11_ROI_le
 #create a vector for these
 seedTarget=( 'output/ROIS/fullCutIC11_ROI_left.mif' 'output/ROIS/fullCutIC11_ROI_right.mif')
 
+
 #get the length
 trackROISNuM=${#ROIS2Track[@]}
 divisor=2
@@ -554,7 +555,7 @@ for iterations in $(seq $iterationsNum); do
 
             echo "Tracking SD_STREAM streamlines at Lmax ${lmax} with a maximum curvature of ${curv} degrees..."
             timeout $TCKGEN_TIMEOUT tckgen $fod -algorithm SD_STREAM \
-               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations]}  \
+               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations-1]}  \
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -angle ${curv} -minlength $MIN_LENGTH -maxlength $MAX_LENGTH -seeds 0 -max_attempts_per_seed 500 \
                wb_SD_STREAM_lmax${lmax}_curv${curv}.tck -downsample 1 -force -nthreads $NCORE -quiet
@@ -592,7 +593,7 @@ for iterations in $(seq $iterationsNum); do
         sh2peaks $fod $pks -num $FACT_DIRS -nthread $NCORE -quiet
 
         echo "Tracking FACT streamlines at Lmax ${lmax} using ${FACT_DIRS} maximum directions..."
-        timeout $TCKGEN_TIMEOUT tckgen $pks -algorithm FACT -select $FACT_FIBS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations]}  \
+        timeout $TCKGEN_TIMEOUT tckgen $pks -algorithm FACT -select $FACT_FIBS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations-1]}  \
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -seeds 0 -max_attempts_per_seed 500 \
                -minlength $MIN_LENGTH -maxlength $MAX_LENGTH wb_FACT_lmax${lmax}.tck -downsample 1 -force -nthreads $NCORE -quiet
@@ -612,7 +613,7 @@ for iterations in $(seq $iterationsNum); do
         for curv in $CURVS; do
             echo "Tracking deterministic tensor streamlines with a maximum curvature of ${curv} degrees..."
             timeout $TCKGEN_TIMEOUT tckgen ${difm}.mif -algorithm Tensor_Det \
-               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations]}  \
+               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations-1]}  \
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -angle ${curv} -minlength $MIN_LENGTH -maxlength $MAX_LENGTH -seeds 0 -max_attempts_per_seed 500 \
                wb_Tensor_Det_curv${curv}.tck -downsample 1 -force -nthreads $NCORE -quiet
@@ -635,7 +636,7 @@ for iterations in $(seq $iterationsNum); do
 
         echo "Tracking probabilistic tensor streamlines at with a maximum curvature of ${curv} degrees..."
         timeout $TCKGEN_TIMEOUT tckgen ${difm}.mif -algorithm Tensor_Prob \
-               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations]}  \
+               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -seed_image ${seedTarget[$iterations-1]}  \
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -angle ${curv} -minlength $MIN_LENGTH -maxlength $MAX_LENGTH -seeds 0 -max_attempts_per_seed 500 \
                wb_Tensor_Prob_curv${curv}.tck -downsample 1 -force -nthreads $NCORE -quiet
