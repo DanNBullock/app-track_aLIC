@@ -481,7 +481,7 @@ for iterations in $(seq $iterationsNum); do
 	    
             echo "Tracking iFOD2 streamlines at Lmax ${lmax} with a maximum curvature of ${curv} degrees..."
             timeout $TCKGEN_TIMEOUT tckgen $fod -algorithm iFOD2 \
-               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -backtrack -seed_image ${seedTarget[$iterations]}\
+               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -backtrack -seed_image ${seedTarget[$iterations-1]}\
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -angle ${curv} -minlength $MIN_LENGTH -maxlength $MAX_LENGTH -seeds 0 -max_attempts_per_seed 500 \
                wb_iFOD2_lmax${lmax}_curv${curv}.tck -downsample 1 -force -nthreads $NCORE -quiet
@@ -518,7 +518,7 @@ for iterations in $(seq $iterationsNum); do
 
             echo "Tracking iFOD1 streamlines at Lmax ${lmax} with a maximum curvature of ${curv} degrees..."
             timeout $TCKGEN_TIMEOUT tckgen $fod -algorithm iFOD1 \
-               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -backtrack -seed_image ${seedTarget[$iterations]} \
+               -select $NUM_FIBERS -step $STEP_SIZE -act 5tt.mif -backtrack -seed_image ${seedTarget[$iterations-1]} \
                -include output/ROIS/ROI_${sourceIndex}.mif -include output/ROIS/ROI_${targetIndex}.mif \
                -angle ${curv} -minlength $MIN_LENGTH -maxlength $MAX_LENGTH -seeds 0 -max_attempts_per_seed 500 \
                wb_iFOD1_lmax${lmax}_curv${curv}.tck -downsample 1 -force -nthreads $NCORE -quiet
