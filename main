@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=track_aLIC
 #SBATCH --ntasks-per-node=8
-#SBATCH --mem=50G
-#SBATCH --time=48:00:00
+#SBATCH --mem=32G
+#SBATCH --time=08:00:00
 
 #run the tracking
 app-track-between-multiple-regions/main
