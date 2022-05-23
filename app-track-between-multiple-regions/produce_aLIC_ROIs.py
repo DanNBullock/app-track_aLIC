@@ -46,12 +46,12 @@ if not os.path.exists(outDir+'/ROIS'):
 fsPath=config['freesurfer']
 #you may need to convert the .mgz files to .nii.gz using the mr_convert command
 #also, you may need to rename the subsequent aparcDk atlas file to it's standard name:
-# aparc+aseg
+atlasName='aparc+aseg'
 try:
-    inputAtlas=nib.load(os.path.join(fsPath,'mri/aparc.DKTatlas+aseg.nii.gz'))
+    inputAtlas=nib.load(os.path.join(fsPath,'mri/'+atlasName+'.nii.gz'))
 except:
     #can nibael handle mgz?
-    inputAtlas=nib.load(os.path.join(fsPath,'mri/aparc.DKTatlas+aseg.mgz'))
+    inputAtlas=nib.load(os.path.join(fsPath,'mri/'+atlasName+'.mgz'))
 inputAtlas=wmaPyTools.roiTools.inflateAtlasIntoWMandBG(inputAtlas, 1)
 # lookupTablePath=config['lookupTable']
 # lookupTable=pd.read_csv(lookupTablePath)
