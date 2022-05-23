@@ -37,4 +37,4 @@ tcksORPaths=os.path.join('output')
 
 outStatefulTractogram, wmc_Dict=wmaPyTools.streamlineTools.inputTcks_to_WMCandTCK(tcksORPaths,names=None)
 
-save_tractogram(outStatefulTractogram, os.path.join(tcksORPaths,'tract.tck'))
+save_tractogram(outStatefulTractogram, os.path.join(tcksORPaths,'track.tck'))
