@@ -29,13 +29,15 @@ import os
 import json
 import numpy as np
 import nibabel as nib
-#from glob import glob
+from glob import glob
 from dipy.io.streamline import load_tractogram, save_tractogram
 
-tcksORPaths=os.path.join('output')
+#tcksORPaths=os.path.join('output')
 
-#tckFilePaths=glob(os.path.join(tcksORPaths,'*.tck'))
+#currently just being output to the app directory
 
-outStatefulTractogram, wmc_Dict=wmaPyTools.streamlineTools.inputTcks_to_WMCandTCK(tcksORPaths,names=None)
+tckFilePaths=glob(os.path.join('*.tck'))
 
-save_tractogram(outStatefulTractogram, os.path.join(tcksORPaths,'track.tck'))
+outStatefulTractogram, wmc_Dict=wmaPyTools.streamlineTools.inputTcks_to_WMCandTCK(tckFilePaths,names=None)
+
+save_tractogram(outStatefulTractogram, os.path.join('track.tck'))
