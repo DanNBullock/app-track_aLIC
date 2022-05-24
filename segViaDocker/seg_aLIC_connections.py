@@ -41,7 +41,7 @@ if not os.path.exists(outDir):
 if not os.path.exists(os.path.join(outDir,'ROIS')):
     os.makedirs(os.path.join(outDir,'ROIS'))
 #set to freesurfer output path for this subject
-fsPath=config['fsDir']
+fsPath=config['freesurfer']
 #you may need to convert the .mgz files to .nii.gz using the mr_convert command
 #also, you may need to rename the subsequent aparcDk atlas file to it's standard name:
 atlasName='aparc+aseg'
