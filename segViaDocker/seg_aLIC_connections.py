@@ -62,7 +62,7 @@ invalidLabels=[63,31,4,14,15,43,24,72]
 #extract whole brain segmentation
 #set to path to target whole brain tractogram
 #smaller = faster
-tractogramPath=config['tractogram']
+tractogramPath='track.tck'
 tractogramLoad=nib.streamlines.load(tractogramPath)
 #is this creating inf values?
 #streamlines=wmaPyTools.streamlineTools.orientAllStreamlines(tractogramLoad.streamlines)
