@@ -29,6 +29,7 @@ import os
 import json
 import numpy as np
 import nibabel as nib
+import shutil
 
 
 # load inputs from config.json
@@ -63,6 +64,10 @@ invalidLabels=[63,31,4,14,15,43,24,72]
 #set to path to target whole brain tractogram
 #smaller = faster
 tractogramPath='track.tck'
+#but also copy it over to the output dir because it won't take it otherwise
+#inelegant, but here we are
+shutil.copyfile('track.tck',os.path.join(outDir,'track.tck'))
+
 tractogramLoad=nib.streamlines.load(tractogramPath)
 #is this creating inf values?
 #streamlines=wmaPyTools.streamlineTools.orientAllStreamlines(tractogramLoad.streamlines)
@@ -213,9 +218,9 @@ for iIndex,iSide in enumerate(sideList):
 
 from scipy.io import savemat
 #save down the classification structure
-if not os.path.exists(os.path.join(outDir,'wmc')):
-    os.makedirs(os.path.join(outDir,'wmc'))
-savemat(os.path.join(outDir,'wmc','classification.mat'),classificationOut)
+if not os.path.exists(os.path.join('wmc')):
+    os.makedirs(os.path.join('wmc'))
+savemat(os.path.join('wmc','classification.mat'),classificationOut)
  
 
 
