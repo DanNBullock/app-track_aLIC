@@ -220,7 +220,8 @@ from scipy.io import savemat
 #save down the classification structure
 if not os.path.exists(os.path.join('wmc')):
     os.makedirs(os.path.join('wmc'))
-savemat(os.path.join('wmc','classification.mat'),classificationOut)
+    #savemat acts weird
+savemat(os.path.join('wmc','classification.mat'),{ "classification": {"names": classificationOut['names'], "index": classificationOut['index'] }})
  
 
 
