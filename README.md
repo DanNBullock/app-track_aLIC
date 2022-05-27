@@ -7,7 +7,7 @@ Track the [anterior limb of the internal capsule](https://doi.org/10.1523/JNEURO
 
 ## Overview of app-track_aLIC
 
-This application produces a streamline-based model of the anterior limb of the internal capsule.
+This application produces a streamline-based model of the anterior limb of the internal capsule.  It further divides its output into a superior (canonical) and inferior (non-canonical) components. 
 
 ### App use case
 
@@ -137,7 +137,7 @@ Consider reviewing the [json standard overview](https://www.json.org/json-en.htm
 
 The config.json file can provide a standard interface for controlling execution of the code, whether using [brainlife.io](https://brainlife.io/), [docker](https://docs.docker.com/)/[singularity](https://sylabs.io/guides/2.6/user-guide/index.html), or a local python environment.
 
-####  The config.json for this app
+####  The config.json for *this* app
 
 Below you will find an example config.json for this app.
 
@@ -170,6 +170,8 @@ Below you will find an example config.json for this app.
 ```
 
 ###  Using this app on [Brainlife.io](https://brainlife.io/)
+
+NOTE: for any given app on Brainlife.io, a link to the corresponding github repository (containing the code used to run the app) can be found just below the app name (in gray text) on the Apps "homepage".
 
 #### Input datatypes
 
@@ -226,17 +228,50 @@ The virtual environments instantiated when a docker image is run (via singularit
 - 1.  Ensure that all requisite files & functions are accessible on these paths.  For requisite files (e.g. input data) in particular, this may mean storing these in a subdirectory of the directory from which the "main" bash script (e.g. where the singularity call is executed).
 - 2.  [Manual specification of additional bindpaths using the --bind option](https://sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html#user-defined-bind-paths)
 
-### Local usage via
+### Local usage
 With the appropriate modules installed in your local os and python environment it is also possible to run this code.  Ensure that the required modules (see below) are installed, that the config.json file is pointing to the correct files, and you should be ready to go.
 
 #### Required packages / modules
-(list the packages and modules required for the execution of this code)
+
+- MRtrix3
+- Dipy
+- wmaPyTools (included as submodule)
+- numpy
+- nibabel
+- nilearn (?)
 
 (consider https://docs.python.org/3/library/modulefinder.html run on main)
-(non-exhaustive listing of directly called packages that the relevant docker image would need to have or the user would need to have in their local environment)
 
 ## Followup 
-(consider describing and linking code and applications which could be used with the output of this code or application to produce a more comprehensive analysis or processing pipeline)
+
+NOTE: for any given app on Brainlife.io, a link to the corresponding github repository (containing the code used to run the app) can be found just below the app name (in gray text) on the Apps "homepage".
+
+### Converting to tck files
+
+- [Extract multi-tcks from wmc + wbfg or composite tck](https://doi.org/10.25663/brainlife.app.251) 
+
+As noted earlier, the output of this application/code (a [WMC/classification.mat](https://brainlife.io/datatype/5cc1d64c44947d8aea6b2d8b/readme) file) can be converted to a collection of .tck files using [this app](https://doi.org/10.25663/brainlife.app.251) or [this code](https://github.com/DanNBullock/wma_pyTools/blob/13be3f4c6e509760022919d223fd8cd102cf8020/wmaPyTools/streamlineTools.py#L815-L873) (with the additional provision of the source .tck file--"track.tck" in this case.
+
+### Converting to density NIFTIs
+
+The following app can be used to obtain a density NIFTI for each of the white matter structures identified:
+
+- [Track Density Masks](https://doi.org/10.25663/brainlife.app.498)
+
+### Visualization
+
+These apps can be used to provide visualizations for this output:
+
+- [Generate tract figures (wma_pyTools)](https://doi.org/10.25663/brainlife.app.638) 
+- [Generate figures of white matter tracts overlaid on anatomical image](https://doi.org/10.25663/brainlife.app.607) 
+- [WMC Figures (AFQ or WMA)](https://doi.org/10.25663/brainlife.app.145) (depricated)
+
+### Quantification and analysis
+
+These apps can be used to provide quantative analyses:
+
+-  [Tractography quality check](https://doi.org/10.25663/brainlife.app.189)
 
 ## Development note
+
 Work to better structure and document this code/application.  Please feel free to create issues [using the "issues" tab above] to help foster clarity in documentation, or to suggest alterations to documentation/code more directly. Furthermore, it is _acutely_ understood that many of the functionalities in this package may be redundant implementations of (likely more robust and reliable) functionalities from other packages. The identification of such instances (and their other-package correspondances) would be **greatly appreciated**. Feel free to create branches which implement these alternatives.  Be sure to update the documentation as well to describe your changes and to ensure that your contributions are appropriately credited.
