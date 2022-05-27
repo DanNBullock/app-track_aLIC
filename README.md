@@ -1,5 +1,5 @@
 [![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.###-blue.svg)](https://doi.org/10.25663/bl.app.###)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.###-blue.svg)](https://doi.org/10.25663/brainlife.app.630)
 
 # app-track_aLIC
 
@@ -7,19 +7,68 @@ Track the [anterior limb of the internal capsule](https://doi.org/10.1523/JNEURO
 
 ## Overview of app-track_aLIC
 
-This application produces a streamline-based model of the anterior limb of the internal capsule.  
+This application produces a streamline-based model of the anterior limb of the internal capsule.
 
 ### App use case
 
-The resultant streamline-based modelf of the anterior limb of the internal capsule can be used to assess the morphology, 
+The resultant streamline-based model of the anterior limb of the internal capsule can be used to assess the morphology, trajectory, spatial occupancy, and connectivity of this structure.
 
 ### Overly simplified algorithm/metholodology
 
-It acheives this by identifying the volume of the white matter corresponding to the current subjects 
+There are three primary steps in this methodlology
+
+- 1.  Identification of the anterior limb white matter volume. This is acheived by identifying anatomical landmarks withing the subject's brain (using the [freesurfer](https://surfer.nmr.mgh.harvard.edu/) [Desikan-Killiany](10.1016/j.neuroimage.2006.01.021) parcellation).  This is performed by the _app-track-between-multiple-regions/produce\_aLIC\_ROIs.py_ script.
+- 2.  Performance of targeted, [ensemble tractography](https://doi.org/10.1371/journal.pcbi.1004692).  This algorithm iterates across parameter settings to create a broadly sampled tractogram.  The current implementation is essentialy a copy of [an existing app/resource (currently entitled "RACE-Track")](https://doi.org/10.25663/bl.app.101) developed and maintaned by [Brent McPherson](https://github.com/bcmcpher).  This is performed by the _app-track-between-multiple-regions/mrtrix3\_tracking.sh_ script.
+- 3.  Segmentation of the resultant tractogram, to produce a curated model of the anterior limb of the internal capsule.  Although [MRtrix3](https://www.mrtrix.org/) and [RACE-Track](https://doi.org/10.25663/bl.app.101) produce quality tractography models, further curation is needed to ensure adherence to constraints of biological plausibility and contemporary understanding of the structure's morphology.  This is acheived via a [White Matter Query Language (WMQL)](https://doi.org/10.1007/s00429-015-1179-4)-like method that has been [used in previous publications](https://doi.org/10.1007/s00429-019-01907-8) and has been comprehensively described in the [White Matter Segentation Education (WIMSE) resource](https://github.com/DanNBullock/WiMSE) (website [here](https://dannbullock.github.io/WiMSE/landingPage.html)).  It is performed by the _segViaDocker/seg\_aLIC\_connections.py_ script.
 
 ### Necessary inputs and outputs
 
+#### Inputs
+
+##### Data
+
+This application requres the following input files/datatypes:
+
+- A preprocessed [DWI image](https://brainlife.io/datatype/58c33c5fe13a50849b25879b/readme) (config.json key: "diff")
+    - Associated bvec and bval files (config.json keys: "bvec" and "bval")
+- A preprocessed [T1 anatomical image](https://brainlife.io/datatype/58c33bcee13a50849b25879a/readme) (config.json key: "anat")
+- A [freesurfer output directory](https://brainlife.io/datatype/58cb22c8e13a50849b25882e/readme) (config.json key for "output" dir: "freesurfer")
+
+NOTE: All of these should be in the same "reference space" and aligned to one another
+
+#### Parameters
+
+This application has the following options for input parameters (listed names = config.json key):
+
+- tensor_fit (type: number): If multi-shell data is passed, this selects the bval shell that will be extracted for application of a tensor fit.  Otherwise, if single-shell data is passed, this is ignored.
+- norm (type: boolean):  Perform log-domain normalization of CSD data before tracking (multi-shell data only).
+- min_length (type: number): The minimum length a streamline may be (in mm).
+- max_length (type: number): The maximum length a streamline may be (in mm).
+- ens_lmax (type: boolean):  Whether to perform [ensemble tracking](https://doi.org/10.1371/journal.pcbi.1004692) on every lmax up to the maximum value passed.
+- curvs (type: multiple numbers):  The maximum curvature angle streamline can take during tracking.  Multiple values results in iteration across these parameters.
+- num\_fibers (type: int):  The number of streamlines to produce _per parameter combination_ (thus the total number returned will be some substantial **multiple** of this).
+- do_dtdt (type: boolean):  Whether to perform tensor-based deterministic tractography.
+- do_dtpb (type: boolean):  Whether to perform tensor-based probabilistic tractography.
+- do_detr (type: boolean):  Whether to perform deterministic tractography.
+- do_prb1 (type: boolean):  Whether to perform mrtrix2 probabilistic tractography.
+- do_prb2 (type: boolean):  Whether to perform mrtrix3 probabilistic tractography
+- do_fact (type: boolean):  Whether to perform FACT tracking.
+- fact_dirs (type: int): The number of directions to perform [FACT tracking](https://radiopaedia.org/articles/fiber-assignment-by-continuous-tracking-algorithm-fact?lang=us) on (if requested).
+- fact_fibs (type: number): The number of FACT fibers to track per lmax (if requested).
+- premask (type: boolean):  If the input anatomical T1s have already been skull stripped, check this to prevent 5ttgen from cutting off a portion of the brain. (This sets -premasked option for 5ttgens)  (WARNING: current implementation does not handle this well; recomended to leave this as FALSE)
+- step (type: number): Streamline internode distance
+- imaxs (type: int(s)): The lmax(s) or (alternatively) maximum value to fit and create tractography data for. If not provided, the App will find the maximum possible lmax within the data and use that.
+
+#### Outputs
 _Check out the [brainlife datatypes webpage](https://brainlife.io/datatypes) for a cataloguing of relevant datatypes._
+
+- This application outputs a [.tck file](https://brainlife.io/datatype/5907d922436ee50ffde9c549/readme) corresponding to the output of the _mrtrix3\_tracking.sh_ script.
+
+- This application also outputs a ["White Matter Classification" (WMC)](https://brainlife.io/datatype/5cc1d64c44947d8aea6b2d8b/readme).  It contains two fields: _names_ which corresponds to the names of the white matter structures identified, and _index_, which corresponds to the identity of each streamline in the associated tck file, with respect to the _name_ vector. To illustrate it's meaning: a 1 at _index_ location 4 indicates that streamline 4 in the associated tractogram is associated with the first structure listed in the _name_ vector.  More can be found on this in the earlier "WMC" link. This file is stored as a [.mat (matlab)](https://www.mathworks.com/help/matlab/ref/matlab.io.matfile.html) file.  However, it can also be straightforwardly converted (with the inclusion of it's associated tck file) into a set of tck files (e.g. using [this app](https://doi.org/10.25663/brainlife.app.251) or [this code](https://github.com/DanNBullock/wma_pyTools/blob/13be3f4c6e509760022919d223fd8cd102cf8020/wmaPyTools/streamlineTools.py#L815-L873) or a [python dictionary object](https://github.com/DanNBullock/wma_pyTools/blob/13be3f4c6e509760022919d223fd8cd102cf8020/wmaPyTools/streamlineTools.py#L875-L929).
+
+### Other usage notes
+
+NOTE:  Runtime for this application will vary in accordance with the number of streamlines requested.  As more streamlines are requeseted, it may be necessary to change the _TCKGEN__TIMEOUT_ parameter in the mrtrix3_tracking.sh scirpt.
 
 ## Author, funding sources, references, & license info
 
@@ -55,13 +104,13 @@ _Check out the [brainlife datatypes webpage](https://brainlife.io/datatypes) for
 
 ### License info
 
-(Statement of copyright and license)
+GNU License
 
 ## Nuts and bolts -- Using this app
-(Provide a description of how to use this code repository in different contexts)
+Below  a description of how to use this code repository on the Brainlife platform, with docker/singularity, or simply in your local compute environment.
 
 ### Omnibus usage notes
-(provide notes/descriptions/documentation of characteristics and info that is applicable _irrespective_ of the particulars of the compute environment/use-case)
+One characteristic that can apply across all of these use contexts is the config.json file.
 
 #### The config.json 
 
@@ -88,19 +137,57 @@ Consider reviewing the [json standard overview](https://www.json.org/json-en.htm
 
 The config.json file can provide a standard interface for controlling execution of the code, whether using [brainlife.io](https://brainlife.io/), [docker](https://docs.docker.com/)/[singularity](https://sylabs.io/guides/2.6/user-guide/index.html), or a local python environment.
 
+####  The config.json for this app
+
+Below you will find an example config.json for this app.
+
+```
+{
+    "tensor_fit": 1,
+    "norm": false,
+    "min_length": 10,
+    "max_length": 250,
+    "ens_lmax": true,
+    "curvs": "5 10 20 40 80",
+    "num_fibers": 2000,
+    "do_dtdt": false,
+    "do_dtpb": false,
+    "do_detr": false,
+    "do_prb1": false,
+    "do_prb2": true,
+    "do_fact": false,
+    "fact_dirs": 3,
+    "fact_fibs": 0,
+    "premask": false,
+    "step": 0.5,
+    "imaxs": 8,
+    "diff": "testdata/dwi.nii.gz",
+    "bvec": "testdata/dwi.bvecs",
+    "bval": "testdata/dwi.bvals",
+    "freesurfer": "testdata/output",
+    "anat": "testdata/t1.nii.gz"
+}
+```
+
 ###  Using this app on [Brainlife.io](https://brainlife.io/)
 
 #### Input datatypes
 
-(describe and link the input datatypes)
+
+This application requres the following input files/datatypes from the [Brainlife.io platform](https://brainlife.io/datatypes):
+
+- A preprocessed [DWI image](https://brainlife.io/datatype/58c33c5fe13a50849b25879b/readme) (config.json key: "diff")
+    - Associated bvec and bval files (config.json keys: "bvec" and "bval")
+- A preprocessed [T1 anatomical image](https://brainlife.io/datatype/58c33bcee13a50849b25879a/readme) (config.json key: "anat")
+- A [freesurfer output directory](https://brainlife.io/datatype/58cb22c8e13a50849b25882e/readme) (config.json key for "output" dir: "freesurfer")
+
+NOTE: All of these should be in the same "reference space" and aligned to one another
 
 #### Parameter settings
 
-(parameter settings, including default/typical inputs/values, should be documented and provided on the [brainlife App user interface page](https://doi.org/10.25663/bl.app.###).  However, use this section to also duplicate   )
+(parameter settings, including default/typical inputs/values, should be documented and provided on the [brainlife App user interface page](https://doi.org/10.25663/brainlife.app.630).  However, use this section to also duplicate   )
 
-- parameter_1: parameter 1 description
-- parameter_2: parameter 1 description
-- parameter_3: parameter 1 description
+SEE "Necessary inputs and outputs" above.
 
 #### Single execution notes
 
@@ -139,8 +226,8 @@ The virtual environments instantiated when a docker image is run (via singularit
 - 1.  Ensure that all requisite files & functions are accessible on these paths.  For requisite files (e.g. input data) in particular, this may mean storing these in a subdirectory of the directory from which the "main" bash script (e.g. where the singularity call is executed).
 - 2.  [Manual specification of additional bindpaths using the --bind option](https://sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html#user-defined-bind-paths)
 
-### Local usage via python
-With the appropriate modules installed in your local python environment it is also possible to run this code.  Ensure that the required modules (see below) are installed, that the config.json file is pointing to the correct files, and you should be ready to go.
+### Local usage via
+With the appropriate modules installed in your local os and python environment it is also possible to run this code.  Ensure that the required modules (see below) are installed, that the config.json file is pointing to the correct files, and you should be ready to go.
 
 #### Required packages / modules
 (list the packages and modules required for the execution of this code)
