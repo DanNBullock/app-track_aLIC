@@ -12,5 +12,10 @@ echo ${currDir}
 
 singularity exec  docker://brainlife/dipy:1.4.1 segViaDocker/seg_aLIC_connections.py
 
+chmod 777 output/*
+
+singularity exec  docker://brainlife/dipy:1.4.1 segViaDocker/reduceToIdentified_aLIC_shortcut.py
+
+
 #cp -r -f segViaDocker/output output
 
