@@ -171,7 +171,7 @@ for iIndex,iSide in enumerate(sideList):
     
     
     #explore its connectivity
-    comboROIBool=wmaPyTools.segmentationTools.segmentTractMultiROI(streamlines, [fullCutIC,frontalROI,spinoThalamicROI,contraWMROI,contraDEroi,badEndpointROI], [True,True,True,False,False,False], ['any',"either_end","either_end","any","any","either_end"])
+    comboROIBool=wmaPyTools.segmentationTools.segmentTractMultiROI_fast(streamlines, [fullCutIC,frontalROI,spinoThalamicROI,contraWMROI,contraDEroi,badEndpointROI], [True,True,True,False,False,False], ['any',"either_end","either_end","any","any","either_end"])
    
     #instead lets inflate into the white matter next to the DC and pallidum to get thse inferior streamlines
 
@@ -221,7 +221,7 @@ from scipy.io import savemat
 if not os.path.exists(os.path.join('wmc')):
     os.makedirs(os.path.join('wmc'))
     #savemat acts weird
-savemat(os.path.join('wmc','classification.mat'),{ "classification": {"names": classificationOut['names'], "index": classificationOut['index'] }})
+savemat(os.path.join('wmc','classification.mat'),{ "classification": {"names": np.array(classificationOut['names'], dtype=np.object), "index": classificationOut['index'] }})
  
 
 
