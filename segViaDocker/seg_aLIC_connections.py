@@ -22,6 +22,7 @@ import wmaPyTools.analysisTools
 import wmaPyTools.segmentationTools
 import wmaPyTools.streamlineTools
 import wmaPyTools.visTools
+from dipy.tracking import utils
 
 #os.chdir(startDir)
 
@@ -215,6 +216,14 @@ for iIndex,iSide in enumerate(sideList):
     
     wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[superiorStreamsBool],os.path.join(outDir,'superior_'+tractName+'.tck'))
     wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[inferiorStreamsBool],os.path.join(outDir,'inferior_'+tractName+'.tck'))
+
+    tractDensityNifti=utils.density_map(streamlines[superiorStreamsBool], inputAtlas.affine, inputAtlas.shape)
+    densityNifti = nib.nifti1.Nifti1Image(tractDensityNifti, inputAtlas.affine, inputAtlas.header)
+    nib.save(densityNifti,os.path.join(outDir,'superior_'+tractName+'.nii.gz'))
+    
+    tractDensityNifti=utils.density_map(streamlines[inferiorStreamsBool], inputAtlas.affine, inputAtlas.shape)
+    densityNifti = nib.nifti1.Nifti1Image(tractDensityNifti, inputAtlas.affine, inputAtlas.header)
+    nib.save(densityNifti,os.path.join(outDir,'inferior_'+tractName+'.nii.gz'))
 
 from scipy.io import savemat
 #save down the classification structure
