@@ -348,8 +348,8 @@ fi
 tensor2metric -mask ${mask}.mif -adc md.mif -fa fa.mif -ad ad.mif -rd rd.mif -cl cl.mif -cp cp.mif -cs cs.mif dt.mif -force -nthreads $NCORE -quiet
 
 echo "Creating 5-Tissue-Type (5TT) tracking mask..."
-5ttgen fsl ${anat}.mif 5tt.mif -mask ${mask}.mif -nocrop -sgm_amyg_hipp -tempdir ./tmp $([ "$PREMASK" == "true" ] && echo "-premasked") -force -nthreads $NCORE -quiet
-#5ttgen freesurfer ${fsDir}/mri/aparc.a2009s+aseg.nii.gz 5tt.mif -lut ${fsDir}/FreeSurferColorLUT.txt -sgm_amyg_hipp -nocrop -tempdir ./tmp -force -nthreads $NCORE 
+5ttgen fsl ${anat}.mif 5tt.mif -mask ${mask}.mif -nocrop -sgm_amyg_hipp -scratch ./tmp $([ "$PREMASK" == "true" ] && echo "-premasked") -force -nthreads $NCORE -quiet
+#5ttgen freesurfer ${fsDir}/mri/aparc.a2009s+aseg.nii.gz 5tt.mif -lut ${fsDir}/FreeSurferColorLUT.txt -sgm_amyg_hipp -nocrop -scratch ./tmp -force -nthreads $NCORE 
 
 ## generate gm-wm interface seed mask
 5tt2gmwmi 5tt.mif gmwmi_seed.mif -force -nthreads $NCORE -quiet
@@ -363,19 +363,19 @@ mrconvert gmwmi_seed.mif gmwmi_seed.nii.gz -force -nthreads $NCORE -quiet
 if [ $MS -eq 0 ]; then
     
     echo "Estimating CSD response function..."
-    #time dwi2response tournier ${difm}.mif wmt.txt -lmax $MMAXS -force -nthreads $NCORE -tempdir ./tmp -quiet
+    #time dwi2response tournier ${difm}.mif wmt.txt -lmax $MMAXS -force -nthreads $NCORE -scratch ./tmp -quiet
     
     #mark alteration
     #rmax is correct, which includes 0 as the first value in cases of single shell.  For whatever reason it treats b0 as a separate shell
-    time dwi2response dhollander ${difm}.mif  wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -force -nthreads $NCORE -tempdir ./tmp -quiet
+    time dwi2response dhollander ${difm}.mif  wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -force -nthreads $NCORE -scratch ./tmp -quiet
     
     
     
 else
 
     echo "Estimating MSMT CSD response function..."
-    #time dwi2response msmt_5tt ${difm}.mif 5tt.mif wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -tempdir ./tmp -force -nthreads $NCORE -quiet
-    time dwi2response dhollander ${difm}.mif wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -force -nthreads $NCORE -tempdir ./tmp -quiet
+    #time dwi2response msmt_5tt ${difm}.mif 5tt.mif wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -scratch ./tmp -force -nthreads $NCORE -quiet
+    time dwi2response dhollander ${difm}.mif wmt.txt gmt.txt csf.txt -mask ${mask}.mif -lmax $RMAX -force -nthreads $NCORE -scratch ./tmp -quiet
 fi
 
 ## fit the CSD across requested lmax's
