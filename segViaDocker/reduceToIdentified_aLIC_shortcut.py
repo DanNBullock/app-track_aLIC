@@ -85,7 +85,7 @@ reducedWMCDir=os.path.join('reduced_wmc')
 if not os.path.exists(reducedWMCDir):
     os.makedirs(reducedWMCDir)
     #savemat acts weird
-savemat(os.path.join('wmc','classification.mat'),{ "classification": {"names": np.array(dictOut['names'], dtype=np.object), "index": dictOut['index'] }})
+savemat(os.path.join(reducedWMCDir,'classification.mat'),{ "classification": {"names": np.array(dictOut['names'], dtype=np.object), "index": dictOut['index'] }})
  
 
 
