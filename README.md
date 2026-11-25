@@ -3,6 +3,66 @@
 
 # app-track_aLIC
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Tracks the anterior limb of the internal capsule (aLIC) with MRtrix3 ensemble tractography between FreeSurfer-derived anatomical landmarks and segments it into superior and inferior components, outputting a .tck and a WMC.**
+
+Identifies the anterior limb white matter volume from FreeSurfer landmarks, runs targeted ensemble tractography (parameter sweep over curvature, lmax and tracking algorithms) with MRtrix3, and segments the result into a canonical superior and a non-canonical inferior aLIC component. Use it to study the morphology, trajectory and connectivity of the aLIC. DWI, T1w and FreeSurfer output must be preprocessed and aligned to one another; runtime grows with the number of streamlines requested.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/dwi` · `neuro/freesurfer` · `neuro/anat/t1w` |
+| 📤 **Outputs** | `neuro/track/tck` · `neuro/wmc` |
+| ⚙️ **Resources** | 32 GB memory · 8 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.630](https://doi.org/10.25663/brainlife.app.630) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `dwi` | `neuro/dwi` | yes | Preprocessed DWI with bvecs and bvals. Aligned with the T1w and FreeSurfer output. |
+| `freesurfer` | `neuro/freesurfer` | yes | FreeSurfer recon-all output of the subject, used to locate the aLIC landmarks. Aligned with the DWI. |
+| `anat` | `neuro/anat/t1w` | yes | Preprocessed T1-weighted image used for 5ttgen tissue segmentation. Aligned with the DWI. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `output` | `neuro/track/tck` | Tractogram (.tck) from the targeted ensemble tracking. |
+| `wmc` | `neuro/wmc` | White matter classification with the superior and inferior aLIC components of the tractogram. |
+
+<details>
+<summary><b>⚙️ Parameters</b> (18)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `tensor_fit` | number | `1` | If multi-shell data is passed, this selects the shell that will be extracted and have a tensor fit performed If single-shell data is passed, this is ignored |
+| `norm` | boolean | `false` | perform log-domain normalization of CSD data before tracking (multi-shell data only) |
+| `min_length` | number | `10` | the minimum length a streamline may be |
+| `max_length` | number | `250` | the maximum length a streamline may be |
+| `ens_lmax` | boolean | `true` | perform ensemble tracking on every lmax up to the maximum value passed |
+| `curvs` | string | `5 10 20 40 80` | the maximum curvature angle streamline can take during tracking |
+| `num_fibers` | number | `2500` | the number of streamlines to produce per parameter combination |
+| `do_dtdt` | boolean | `false` | perform tensor-based deterministic tractography |
+| `do_dtpb` | boolean | `false` | perform tensor-based probabilistic tractography |
+| `do_detr` | boolean | `false` | perform deterministic tractography |
+| `do_prb1` | boolean | `false` | perform mrtrix2 probabilistic tractography |
+| `do_prb2` | boolean | `true` | perform mrtrix3 probabilistic tractography |
+| `do_fact` | boolean | `false` | Perform FACT tracking |
+| `fact_dirs` | number | `3` | The number of directions to perform FACT tracking on. |
+| `fact_fibs` | number | `0` | The number of FACT fibers to track per lmax. |
+| `premask` | boolean | `false` | If the input anatomical T1s have already been skull stripped, check this to prevent 5ttgen from cutting off a portion of the brain. (This sets -premasked option for 5ttgens) |
+| `step` | number | `0.5` | Streamline internode distance |
+| `imaxs` | number | `8` | Maximum lmax (or list of lmax values) to fit and track; if not given, the maximum lmax supported by the data is used. |
+
+</details>
+
+📚 **References used by this App:**
+- Takemura H., Caiafa C. F., Wandell B. A., Pestilli F. Ensemble tractography. PLoS Computational Biology 12(2):e1004692 (2016). [doi:10.1371/journal.pcbi.1004692](https://doi.org/10.1371/journal.pcbi.1004692)
+- Anterior limb of the internal capsule reference cited in the README (J Neurosci 2017). [doi:10.1523/JNEUROSCI.2335-17.2017](https://doi.org/10.1523/JNEUROSCI.2335-17.2017)
+
+<!-- brainlife-app:end -->
+
 Track the [anterior limb of the internal capsule](https://doi.org/10.1523/JNEUROSCI.2335-17.2017) using [ensemble tractography](https://doi.org/10.1371/journal.pcbi.1004692) (i.e. via parameter sweep)
 
 ## Overview of app-track_aLIC
